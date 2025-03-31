@@ -3,356 +3,836 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn English Flashcards & Quiz</title>
+  <title>Lingua Cards</title>
   <style>
-    /* Basic Reset */
+    :root {
+      --system-background: #d1d3d8; /* Soft gray similar to Apple's silver */
+      --secondary-background: #ffffff;
+      --tertiary-background: #f5f5f7;
+      --label-primary: #333333; /* Dark gray text for better contrast */
+      --label-secondary: #666666; /* Lighter gray for secondary text */
+      --system-blue: #007aff; /* Apple's blue tone */
+      --system-green: #30d158;
+      --system-red: #ff453a;
+      --separator-color: #cccccc; /* Lighter separator color */
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); /* Soft shadow */
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+      --system-background: #d1d3d8; /* Soft gray similar to Apple's silver */
+      --secondary-background: #ffffff;
+      --tertiary-background: #f5f5f7;
+      --label-primary: #333333; /* Dark gray text for better contrast */
+      --label-secondary: #666666; /* Lighter gray for secondary text */
+      --system-blue: #007aff; /* Apple's blue tone */
+      --system-green: #30d158;
+      --system-red: #ff453a;
+      --separator-color: #cccccc; /* Lighter separator color */
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); /* Soft shadow */
+      }
+    }
+
+    /* Base Styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: #f2f2f7;
-      color: #333;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      background-color: var(--system-background);
+      color: var(--label-primary);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 20px;
+    }
+
+    h1, h2, h3 {
+      font-weight: 600;
+      letter-spacing: -0.5px;
     }
 
     h1 {
-      font-size: 2.5rem;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 20px;
+      font-size: 32px;
+      margin-bottom: 8px;
     }
 
-    /* Menu Style */
-    .menu {
+    h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--label-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* Container Styles */
+    .container {
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      text-align: center;
+      flex: 1;
+    }
+
+    /* Card Styles */
+    .card {
+      background-color: var(--secondary-background);
+      border-radius: 12px;
       padding: 20px;
-      border-radius: 15px;
-      background-color: #fff;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 16px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .menu button {
-      font-size: 18px;
-      padding: 12px 25px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .card:hover {
+      transform: translateY(-2px);
     }
 
-    .menu button:hover {
-      background-color: #45a049;
-    }
-
-    /* Back to Menu Button */
-    .back-button {
-      margin-top: 20px;
-      font-size: 16px;
-      padding: 10px 15px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .back-button:hover {
-      background-color: #2980b9;
-    }
-
-    /* Container for each section */
-    .container {
-      width: 100%;
-      max-width: 1000px;
-      margin-top: 30px;
-    }
-
-    .flashcard-container,
-    .quiz-container {
-      display: flex;
-      flex-wrap: wrap;
+    /* Button Styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      gap: 20px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .btn-primary {
+      background-color: var(--system-blue);
+      color: white;
+    }
+
+    .btn-secondary {
+      background-color: var(--tertiary-background);
+      color: var(--system-blue);
+    }
+
+    .btn-destructive {
+      background-color: var(--system-red);
+      color: white;
+    }
+
+    .btn:active {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+
+    /* Input Styles */
+    .input-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .input-field {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--separator-color);
+      background-color: var(--secondary-background);
+      font-size: 17px;
+      color: var(--label-primary);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--system-blue);
+    }
+
+    /* Part Selection */
+    .part-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .part-btn {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--secondary-background);
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--card-shadow);
+    }
+
+    .part-btn:hover {
+      background-color: var(--system-blue);
+      color: white;
+    }
+
+    .part-btn.active {
+      background-color: var(--system-blue);
+      color: white;
+    }
+
+    /* Flashcard Styles */
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     .flashcard {
-      width: 200px;
-      height: 250px;
-      margin: 10px;
-      border-radius: 15px;
-      background-color: #fff;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-size: 22px;
+      aspect-ratio: 3/4;
+      perspective: 1000px;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .flashcard-inner {
       position: relative;
-      transform-style: preserve-3d;
-    }
-
-    .flashcard:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .flashcard .front,
-    .flashcard .back {
-      position: absolute;
-      backface-visibility: hidden;
       width: 100%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      color: #333;
-      border-radius: 15px;
-      padding: 20px;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
     }
 
-    .flashcard .front {
-      background-color: #ffffff;
-    }
-
-    .flashcard .back {
-      background-color: #fffae6;
+    .flashcard.flipped .flashcard-inner {
       transform: rotateY(180deg);
     }
 
-    .flashcard.flip {
-      transform: rotateY(180deg);
-    }
-
-    /* Edit and delete buttons */
-    .flashcard .delete-btn,
-    .flashcard .edit-btn {
+    .flashcard-front, .flashcard-back {
       position: absolute;
-      top: 10px;
-      right: 10px;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .flashcard-front {
+      background-color: var(--secondary-background);
+      color: var(--label-primary);
+    }
+
+    .flashcard-back {
+      background-color: var(--system-blue);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-actions {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .action-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: rgba(0, 0, 0, 0.6);
       color: white;
       border: none;
-      padding: 5px 12px;
-      font-size: 14px;
-      border-radius: 25px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .flashcard .edit-btn {
-      background-color: #4CAF50;
-    }
-
-    .flashcard .delete-btn {
-      background-color: #e74c3c;
-    }
-
-    .flashcard .delete-btn:hover,
-    .flashcard .edit-btn:hover {
-      background-color: rgba(0, 0, 0, 0.8);
-    }
-
-    /* Input container for flashcards */
-    .input-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-top: 20px;
-      gap: 15px;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 15px;
-    }
-
-    .input-container input,
-    .input-container button {
-      font-size: 16px;
-      padding: 10px 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-
-    .input-container input:focus,
-    .input-container button:focus {
-      outline: none;
-      border-color: #4CAF50;
-    }
-
-    .input-container button {
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .input-container button:hover {
-      background-color: #45a049;
-    }
-
-    /* Error message */
-    .error-message {
-      color: #e74c3c;
       font-size: 14px;
-      text-align: center;
-      margin-top: 5px;
-      height: 20px;
     }
 
-    /* Quiz Section */
-    .quiz-container {
-      margin-top: 50px;
+    /* Quiz Styles */
+    .quiz-card {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 24px;
+    }
+
+    .quiz-answer {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    /* Utility Classes */
+    .text-center {
       text-align: center;
     }
 
-    .quiz-container input {
-      font-size: 18px;
-      padding: 10px 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 250px;
+    .mb-16 {
+      margin-bottom: 16px;
     }
 
-    .quiz-container button {
-      font-size: 16px;
-      padding: 10px 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .mb-24 {
+      margin-bottom: 24px;
     }
 
-    .quiz-container button:hover {
-      background-color: #45a049;
+    .hidden {
+      display: none !important;
     }
 
+    /* Section Transitions */
+    .section {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-
-  <h1>Learn English Flashcards & Quiz</h1>
-
-  <!-- Menu Section -->
-  <div id="menu" class="menu">
-    <button onclick="showFlashcards()">Flashcards</button>
-    <button onclick="showQuiz()">Quiz</button>
-    <button onclick="showReverseQuiz()">Reverse Quiz (En -> Vi)</button>
-  </div>
-
-  <!-- Flashcards Section -->
-  <div id="flashcards-section" class="container" style="display: none;">
-    <h2>Flashcards</h2>
-    <div class="flashcard-container" id="flashcard-container"></div>
-    <div class="input-container">
-      <div class="input-row">
-        <input type="text" id="english-word" placeholder="Enter English word" />
-        <input type="text" id="vietnamese-meaning" placeholder="Enter meaning in Vietnamese" />
-        <button onclick="addFlashcard()">Add Flashcard</button>
+  <div class="container">
+    <!-- Part Selection Section -->
+    <section id="part-selection-section" class="section">
+      <h1 class="text-center">Lingua Cards</h1>
+      <p class="subtitle text-center">Select a part to begin learning</p>
+      
+      <div class="card">
+        <div class="part-grid" id="part-grid"></div>
+        <button class="btn btn-primary" id="start-learning-btn">Start Learning</button>
       </div>
-      <div id="error-message" class="error-message"></div>
-    </div>
-    <button class="back-button" onclick="backToMenu()">Back to Menu</button>
-  </div>
+    </section>
 
-  <!-- Quiz Section -->
-  <div id="quiz-section" class="container" style="display: none;">
-    <h2>Quiz: Translate the word</h2>
-    <div class="quiz-container">
-      <div id="quiz-card" class="flashcard"></div>
-      <input type="text" id="quiz-answer" placeholder="Enter the English word" />
-      <button onclick="checkAnswer()">Next</button>
-    </div>
-    <button class="back-button" onclick="backToMenu()">Back to Menu</button>
-  </div>
+    <!-- Main Menu Section -->
+    <section id="menu-section" class="section hidden">
+      <h1 class="text-center">Part <span id="current-part">1</span></h1>
+      <p class="subtitle text-center mb-24">Choose your learning mode</p>
+      
+      <div class="card">
+        <button class="btn btn-secondary mb-16" id="flashcards-btn" style="width: 100%;">
+          Flashcards
+        </button>
+        <button class="btn btn-secondary mb-16" id="quiz-btn" style="width: 100%;">
+          Quiz (Vi → En)
+        </button>
+        <button class="btn btn-secondary" id="reverse-quiz-btn" style="width: 100%;">
+          Reverse Quiz (En → Vi)
+        </button>
+      </div>
+      
+      <button class="btn" id="back-to-parts-btn" style="width: 100%;">
+        Back to Parts
+      </button>
+    </section>
 
-  <!-- Reverse Quiz Section -->
-  <div id="reverse-quiz-section" class="container" style="display: none;">
-    <h2>Reverse Quiz: Translate English to Vietnamese</h2>
-    <div class="quiz-container">
-      <div id="reverse-quiz-card" class="flashcard"></div>
-      <input type="text" id="reverse-quiz-answer" placeholder="Enter the Vietnamese meaning" />
-      <button onclick="checkReverseAnswer()">Next</button>
-    </div>
-    <button class="back-button" onclick="backToMenu()">Back to Menu</button>
+    <!-- Flashcards Section -->
+    <section id="flashcards-section" class="section hidden">
+      <h1 class="text-center">Flashcards</h1>
+      <p class="subtitle text-center">Part <span id="flashcards-part">1</span></p>
+      
+      <div class="flashcard-grid" id="flashcard-container"></div>
+      
+      <div class="card">
+        <div class="input-group">
+          <input type="text" class="input-field" id="english-word" placeholder="English word">
+          <input type="text" class="input-field" id="vietnamese-meaning" placeholder="Vietnamese meaning">
+        </div>
+        <button class="btn btn-primary" id="add-flashcard-btn">Add Flashcard</button>
+        <p class="error-message" id="error-message" style="color: var(--system-red); margin-top: 8px;"></p>
+      </div>
+      
+      <button class="btn" id="back-to-menu-btn" style="width: 100%;">
+        Back to Menu
+      </button>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz-section" class="section hidden">
+      <h1 class="text-center">Quiz</h1>
+      <p class="subtitle text-center">Translate to English (Part <span id="quiz-part">1</span>)</p>
+      
+      <div class="quiz-card flashcard" id="quiz-card">
+        <div class="flashcard-inner">
+          <div class="flashcard-front" id="quiz-question"></div>
+        </div>
+      </div>
+      
+      <input type="text" class="input-field quiz-answer" id="quiz-answer" placeholder="Type the English word">
+      <button class="btn btn-primary" id="next-quiz-btn" style="width: 100%;">
+        Check Answer
+      </button>
+      
+      <button class="btn" id="back-to-menu-btn-2" style="width: 100%; margin-top: 16px;">
+        Back to Menu
+      </button>
+    </section>
+
+    <!-- Reverse Quiz Section -->
+    <section id="reverse-quiz-section" class="section hidden">
+      <h1 class="text-center">Reverse Quiz</h1>
+      <p class="subtitle text-center">Translate to Vietnamese (Part <span id="reverse-quiz-part">1</span>)</p>
+      
+      <div class="quiz-card flashcard" id="reverse-quiz-card">
+        <div class="flashcard-inner">
+          <div class="flashcard-front" id="reverse-quiz-question"></div>
+        </div>
+      </div>
+      
+      <input type="text" class="input-field quiz-answer" id="reverse-quiz-answer" placeholder="Type the Vietnamese meaning">
+      <button class="btn btn-primary" id="next-reverse-quiz-btn" style="width: 100%;">
+        Check Answer
+      </button>
+      
+      <button class="btn" id="back-to-menu-btn-3" style="width: 100%; margin-top: 16px;">
+        Back to Menu
+      </button>
+    </section>
   </div>
 
   <script>
+    // App Configuration
+    const CARDS_PER_PART = 10;
+    let currentPart = 1;
+    let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+    let quizCards = [];
+    let reverseQuizCards = [];
     let quizIndex = 0;
     let reverseQuizIndex = 0;
-    let shuffledQuizCards = [];
-    let shuffledReverseQuizCards = [];
-    let flashcardsForQuiz = [];
 
-    const quizCardElement = document.getElementById('quiz-card');
-    const reverseQuizCardElement = document.getElementById('reverse-quiz-card');
-    const errorMessageElement = document.getElementById('error-message');
+    // DOM Elements
+    const partGrid = document.getElementById('part-grid');
+    const startLearningBtn = document.getElementById('start-learning-btn');
+    
+    const menuSection = document.getElementById('menu-section');
+    const flashcardsBtn = document.getElementById('flashcards-btn');
+    const quizBtn = document.getElementById('quiz-btn');
+    const reverseQuizBtn = document.getElementById('reverse-quiz-btn');
+    const backToPartsBtn = document.getElementById('back-to-parts-btn');
+    const currentPartSpan = document.getElementById('current-part');
+    
+    const flashcardsSection = document.getElementById('flashcards-section');
+    const flashcardsPartSpan = document.getElementById('flashcards-part');
+    const flashcardContainer = document.getElementById('flashcard-container');
+    const englishWordInput = document.getElementById('english-word');
+    const vietnameseMeaningInput = document.getElementById('vietnamese-meaning');
+    const addFlashcardBtn = document.getElementById('add-flashcard-btn');
+    const errorMessage = document.getElementById('error-message');
+    const backToMenuBtn = document.getElementById('back-to-menu-btn');
+    
+    const quizSection = document.getElementById('quiz-section');
+    const quizPartSpan = document.getElementById('quiz-part');
+    const quizCard = document.getElementById('quiz-card');
+    const quizQuestion = document.getElementById('quiz-question');
+    const quizAnswer = document.getElementById('quiz-answer');
+    const nextQuizBtn = document.getElementById('next-quiz-btn');
+    const backToMenuBtn2 = document.getElementById('back-to-menu-btn-2');
+    
+    const reverseQuizSection = document.getElementById('reverse-quiz-section');
+    const reverseQuizPartSpan = document.getElementById('reverse-quiz-part');
+    const reverseQuizCard = document.getElementById('reverse-quiz-card');
+    const reverseQuizQuestion = document.getElementById('reverse-quiz-question');
+    const reverseQuizAnswer = document.getElementById('reverse-quiz-answer');
+    const nextReverseQuizBtn = document.getElementById('next-reverse-quiz-btn');
+    const backToMenuBtn3 = document.getElementById('back-to-menu-btn-3');
 
-    // Initialize flashcards from localStorage
-    function initializeFlashcards() {
-      flashcardsForQuiz = JSON.parse(localStorage.getItem('flashcards')) || [];
+    // Initialize the app
+    function init() {
+      renderPartSelection();
+      setupEventListeners();
     }
 
-    // Check if flashcard already exists
-    function isDuplicateFlashcard(word, meaning) {
-      const normalizedWord = word.toLowerCase().trim();
-      const normalizedMeaning = meaning.toLowerCase().trim();
+    // Render part selection grid
+    function renderPartSelection() {
+      partGrid.innerHTML = '';
       
-      // Check for exact match
-      const exactMatch = flashcardsForQuiz.some(card => 
-        card.word.toLowerCase().trim() === normalizedWord && 
-        card.meaning.toLowerCase().trim() === normalizedMeaning
-      );
+      const totalParts = Math.floor(flashcards.length / CARDS_PER_PART) + 1;
       
-      if (exactMatch) {
-        return { duplicate: true, type: 'exact', message: "Flashcard này đã tồn tại!" };
+      for (let i = 1; i <= totalParts; i++) {
+        const partBtn = document.createElement('div');
+        partBtn.className = 'part-btn';
+        partBtn.textContent = i;
+        partBtn.dataset.part = i;
+        
+        if (i === currentPart) {
+          partBtn.classList.add('active');
+        }
+        
+        partBtn.addEventListener('click', () => {
+          document.querySelectorAll('.part-btn').forEach(btn => btn.classList.remove('active'));
+          partBtn.classList.add('active');
+          currentPart = i;
+        });
+        
+        partGrid.appendChild(partBtn);
       }
-
-      // Check for English word match
-      const wordMatch = flashcardsForQuiz.some(card => 
-        card.word.toLowerCase().trim() === normalizedWord
-      );
-      
-      if (wordMatch) {
-        return { duplicate: true, type: 'word', message: "Từ tiếng Anh này đã có trong bộ flashcard!" };
-      }
-
-      // Check for Vietnamese meaning match
-      const meaningMatch = flashcardsForQuiz.some(card => 
-        card.meaning.toLowerCase().trim() === normalizedMeaning
-      );
-      
-      if (meaningMatch) {
-        return { duplicate: true, type: 'meaning', message: "Nghĩa tiếng Việt này đã có trong bộ flashcard!" };
-      }
-
-      return { duplicate: false };
     }
 
-    // Fisher-Yates shuffle function to randomize the order of cards
+    // Setup all event listeners
+    function setupEventListeners() {
+      // Part selection
+      startLearningBtn.addEventListener('click', showMenuSection);
+      
+      // Main menu
+      flashcardsBtn.addEventListener('click', showFlashcardsSection);
+      quizBtn.addEventListener('click', showQuizSection);
+      reverseQuizBtn.addEventListener('click', showReverseQuizSection);
+      backToPartsBtn.addEventListener('click', showPartSelectionSection);
+      
+      // Flashcards section
+      addFlashcardBtn.addEventListener('click', addFlashcard);
+      backToMenuBtn.addEventListener('click', showMenuSection);
+      
+      // Quiz section
+      nextQuizBtn.addEventListener('click', checkQuizAnswer);
+      backToMenuBtn2.addEventListener('click', showMenuSection);
+      quizAnswer.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkQuizAnswer();
+      });
+      
+      // Reverse quiz section
+      nextReverseQuizBtn.addEventListener('click', checkReverseQuizAnswer);
+      backToMenuBtn3.addEventListener('click', showMenuSection);
+      reverseQuizAnswer.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkReverseQuizAnswer();
+      });
+    }
+
+    // Navigation functions
+    function showPartSelectionSection() {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById('part-selection-section').classList.remove('hidden');
+      renderPartSelection();
+    }
+
+    function showMenuSection() {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      currentPartSpan.textContent = currentPart;
+      document.getElementById('menu-section').classList.remove('hidden');
+    }
+
+    function showFlashcardsSection() {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      flashcardsPartSpan.textContent = currentPart;
+      document.getElementById('flashcards-section').classList.remove('hidden');
+      loadFlashcardsForCurrentPart();
+    }
+
+    function showQuizSection() {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      quizPartSpan.textContent = currentPart;
+      document.getElementById('quiz-section').classList.remove('hidden');
+      initializeQuiz();
+    }
+
+    function showReverseQuizSection() {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      reverseQuizPartSpan.textContent = currentPart;
+      document.getElementById('reverse-quiz-section').classList.remove('hidden');
+      initializeReverseQuiz();
+    }
+
+    // Function to check for duplicate cards and identify the part
+    function checkDuplicateCard(englishWord) {
+      // Case-insensitive check for duplicates across all parts
+      for (let i = 0; i < flashcards.length; i++) {
+        if (flashcards[i].word.toLowerCase() === englishWord.toLowerCase()) {
+          // Calculate which part this card belongs to
+          const partNumber = Math.floor(i / CARDS_PER_PART) + 1;
+          return {
+            isDuplicate: true,
+            part: partNumber,
+            index: i
+          };
+        }
+      }
+      
+      return {
+        isDuplicate: false
+      };
+    }
+
+    // Flashcard functions
+    function loadFlashcardsForCurrentPart() {
+      flashcardContainer.innerHTML = '';
+      
+      const startIndex = (currentPart - 1) * CARDS_PER_PART;
+      const endIndex = startIndex + CARDS_PER_PART;
+      const partFlashcards = flashcards.slice(startIndex, endIndex);
+      
+      if (partFlashcards.length === 0) {
+        flashcardContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No flashcards in this part yet.</p>';
+        return;
+      }
+      
+      partFlashcards.forEach((card, index) => {
+        const flashcard = createFlashcardElement(card, startIndex + index);
+        flashcardContainer.appendChild(flashcard);
+      });
+    }
+
+    function createFlashcardElement(card, index) {
+      const flashcard = document.createElement('div');
+      flashcard.className = 'flashcard';
+      flashcard.dataset.index = index;
+      
+      flashcard.innerHTML = `
+        <div class="flashcard-inner">
+          <div class="flashcard-front">${card.word}</div>
+          <div class="flashcard-back">${card.meaning}</div>
+        </div>
+        <div class="flashcard-actions">
+          <button class="action-btn edit-btn">✏️</button>
+          <button class="action-btn delete-btn">🗑️</button>
+        </div>
+      `;
+      
+      flashcard.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('action-btn')) {
+          flashcard.classList.toggle('flipped');
+        }
+      });
+      
+      flashcard.querySelector('.edit-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        editFlashcard(index);
+      });
+      
+      flashcard.querySelector('.delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteFlashcard(index);
+      });
+      
+      return flashcard;
+    }
+
+    function addFlashcard() {
+      const englishWord = englishWordInput.value.trim();
+      const vietnameseMeaning = vietnameseMeaningInput.value.trim();
+      
+      // Validate inputs
+      if (!englishWord || !vietnameseMeaning) {
+        showError("Please enter both word and meaning");
+        return;
+      }
+      
+      // Check for duplicate cards with the enhanced function
+      const duplicateCheck = checkDuplicateCard(englishWord);
+      if (duplicateCheck.isDuplicate) {
+        showError(`Card with word "${englishWord}" already exists in Part ${duplicateCheck.part}`);
+        return;
+      }
+      
+      // Check if current part is full
+      const startIndex = (currentPart - 1) * CARDS_PER_PART;
+      const endIndex = startIndex + CARDS_PER_PART;
+      const currentPartCards = flashcards.slice(startIndex, endIndex);
+      
+      if (currentPartCards.length >= CARDS_PER_PART) {
+        showError(`Part ${currentPart} is full (${CARDS_PER_PART} cards)`);
+        return;
+      }
+      
+      // Create new flashcard
+      const newCard = {
+        word: englishWord,
+        meaning: vietnameseMeaning
+      };
+      
+      // Add to flashcards array
+      flashcards.push(newCard);
+      localStorage.setItem('flashcards', JSON.stringify(flashcards));
+      
+      // Clear inputs and error
+      englishWordInput.value = '';
+      vietnameseMeaningInput.value = '';
+      errorMessage.textContent = '';
+      
+      // Update UI
+      renderPartSelection();
+      loadFlashcardsForCurrentPart();
+    }
+
+    function editFlashcard(index) {
+      const card = flashcards[index];
+      
+      // Store the original word to check if it changed during edit
+      const originalWord = card.word;
+      
+      // Set input values
+      englishWordInput.value = card.word;
+      vietnameseMeaningInput.value = card.meaning;
+      
+      // Replace the normal add button functionality temporarily
+      const originalAddBtnText = addFlashcardBtn.textContent;
+      addFlashcardBtn.textContent = "Update Card";
+      
+      // Store the original add function
+      const originalAddFunction = addFlashcardBtn.onclick;
+      
+      // Set new function for updating
+      addFlashcardBtn.onclick = function() {
+        const newWord = englishWordInput.value.trim();
+        const newMeaning = vietnameseMeaningInput.value.trim();
+        
+        // Validate inputs
+        if (!newWord || !newMeaning) {
+          showError("Please enter both word and meaning");
+          return;
+        }
+        
+        // Check for duplicates only if the word changed
+        if (newWord.toLowerCase() !== originalWord.toLowerCase()) {
+          const duplicateCheck = checkDuplicateCard(newWord);
+          if (duplicateCheck.isDuplicate) {
+            showError(`Card with word "${newWord}" already exists in Part ${duplicateCheck.part}`);
+            return;
+          }
+        }
+        
+        // Delete the old card
+        flashcards.splice(index, 1);
+        
+        // Add the updated card
+        const updatedCard = {
+          word: newWord,
+          meaning: newMeaning
+        };
+        
+        flashcards.push(updatedCard);
+        localStorage.setItem('flashcards', JSON.stringify(flashcards));
+        
+        // Restore original button
+        addFlashcardBtn.textContent = originalAddBtnText;
+        addFlashcardBtn.onclick = originalAddFunction;
+        
+        // Clear inputs and error
+        englishWordInput.value = '';
+        vietnameseMeaningInput.value = '';
+        errorMessage.textContent = '';
+        
+        // Update UI
+        renderPartSelection();
+        loadFlashcardsForCurrentPart();
+      };
+    }
+
+    function deleteFlashcard(index) {
+      flashcards.splice(index, 1);
+      localStorage.setItem('flashcards', JSON.stringify(flashcards));
+      
+      // Update UI
+      renderPartSelection();
+      loadFlashcardsForCurrentPart();
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      setTimeout(() => {
+        errorMessage.textContent = '';
+      }, 3000);
+    }
+
+    // Quiz functions
+    function initializeQuiz() {
+      const startIndex = (currentPart - 1) * CARDS_PER_PART;
+      const endIndex = startIndex + CARDS_PER_PART;
+      quizCards = [...flashcards.slice(startIndex, endIndex)];
+      shuffleArray(quizCards);
+      quizIndex = 0;
+      
+      if (quizCards.length > 0) {
+        quizQuestion.textContent = quizCards[quizIndex].meaning;
+        quizAnswer.value = '';
+      } else {
+        quizQuestion.textContent = "No flashcards in this part";
+      }
+    }
+
+    function checkQuizAnswer() {
+      if (quizCards.length === 0) return;
+      
+      const userAnswer = quizAnswer.value.trim().toLowerCase();
+      const correctAnswer = quizCards[quizIndex].word.toLowerCase();
+      
+      if (userAnswer === correctAnswer) {
+        // Correct answer
+        quizIndex++;
+        
+        if (quizIndex >= quizCards.length) {
+          alert('You completed the quiz!');
+          quizIndex = 0;
+          shuffleArray(quizCards);
+        }
+        
+        quizQuestion.textContent = quizCards[quizIndex].meaning;
+        quizAnswer.value = '';
+      } else {
+        // Wrong answer
+        alert(`Incorrect. The correct answer is "${quizCards[quizIndex].word}"`);
+      }
+    }
+
+    // Reverse quiz functions
+    function initializeReverseQuiz() {
+      const startIndex = (currentPart - 1) * CARDS_PER_PART;
+      const endIndex = startIndex + CARDS_PER_PART;
+      reverseQuizCards = [...flashcards.slice(startIndex, endIndex)];
+      shuffleArray(reverseQuizCards);
+      reverseQuizIndex = 0;
+      
+      if (reverseQuizCards.length > 0) {
+        reverseQuizQuestion.textContent = reverseQuizCards[reverseQuizIndex].word;
+        reverseQuizAnswer.value = '';
+      } else {
+        reverseQuizQuestion.textContent = "No flashcards in this part";
+      }
+    }
+
+    function checkReverseQuizAnswer() {
+      if (reverseQuizCards.length === 0) return;
+      
+      const userAnswer = reverseQuizAnswer.value.trim().toLowerCase();
+      const correctAnswer = reverseQuizCards[reverseQuizIndex].meaning.toLowerCase();
+      
+      if (userAnswer === correctAnswer) {
+        // Correct answer
+        reverseQuizIndex++;
+        
+        if (reverseQuizIndex >= reverseQuizCards.length) {
+          alert('You completed the reverse quiz!');
+          reverseQuizIndex = 0;
+          shuffleArray(reverseQuizCards);
+        }
+        
+        reverseQuizQuestion.textContent = reverseQuizCards[reverseQuizIndex].word;
+        reverseQuizAnswer.value = '';
+      } else {
+        // Wrong answer
+        alert(`Incorrect. The correct answer is "${reverseQuizCards[reverseQuizIndex].meaning}"`);
+      }
+    }
+
+    // Utility functions
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -360,293 +840,8 @@
       }
     }
 
-    // Initialize and shuffle the quiz cards
-    function initializeQuiz() {
-      shuffledQuizCards = [...flashcardsForQuiz];  // Copy original array
-      shuffleArray(shuffledQuizCards);
-      quizIndex = 0;  // Reset quiz index
-    }
-
-    // Initialize and shuffle the reverse quiz cards (En -> Vi)
-    function initializeReverseQuiz() {
-      shuffledReverseQuizCards = [...flashcardsForQuiz];  // Copy original array
-      shuffleArray(shuffledReverseQuizCards);
-      reverseQuizIndex = 0;  // Reset reverse quiz index
-    }
-
-    // Show flashcards in Quiz mode
-    function loadQuizCard() {
-      if (shuffledQuizCards.length === 0) {
-        quizCardElement.innerHTML = `
-          <div class="front">No flashcards available. Please add some first.</div>
-        `;
-        return;
-      }
-
-      if (quizIndex < shuffledQuizCards.length) {
-        const flashcard = shuffledQuizCards[quizIndex];
-        quizCardElement.innerHTML = `
-          <div class="front">${flashcard.meaning}</div>
-        `;
-        document.getElementById('quiz-answer').value = '';
-      } else {
-        quizCardElement.innerHTML = `
-          <div class="front">Quiz completed! You answered all cards.</div>
-        `;
-      }
-    }
-
-    // Levenshtein Distance function to calculate the similarity between the input and correct answer
-    function levenshtein(a, b) {
-      const tmp = [];
-      for (let i = 0; i <= a.length; i++) {
-        tmp[i] = [i];
-      }
-      for (let j = 0; j <= b.length; j++) {
-        tmp[0][j] = j;
-      }
-      for (let i = 1; i <= a.length; i++) {
-        for (let j = 1; j <= b.length; j++) {
-          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-          tmp[i][j] = Math.min(
-            tmp[i - 1][j] + 1, // Xóa
-            tmp[i][j - 1] + 1, // Thêm
-            tmp[i - 1][j - 1] + cost // Thay thế
-          );
-        }
-      }
-      return tmp[a.length][b.length];
-    }
-
-    // Check the answer in Quiz mode
-    function checkAnswer() {
-      if (shuffledQuizCards.length === 0) {
-        alert('No flashcards available. Please add some first.');
-        return;
-      }
-
-      const answer = document.getElementById('quiz-answer').value.trim().toLowerCase();
-      const correctAnswer = shuffledQuizCards[quizIndex].word.toLowerCase();
-
-      const distance = levenshtein(answer, correctAnswer); // Calculate Levenshtein distance
-
-      // If distance is 0, answer is correct
-      if (distance === 0) {
-        quizIndex++;
-        if (quizIndex >= shuffledQuizCards.length) {
-          alert('You have completed the quiz!');
-          quizIndex = 0; // Reset quiz
-          initializeQuiz(); // Re-shuffle for new attempt
-        }
-        loadQuizCard();
-      } else if (distance === 1) {
-        alert('You made a small mistake, try again!');
-      } else {
-        alert('Incorrect! Try again.');
-      }
-    }
-
-    // Show flashcards in Reverse Quiz mode (En -> Vi)
-    function loadReverseQuizCard() {
-      if (shuffledReverseQuizCards.length === 0) {
-        reverseQuizCardElement.innerHTML = `
-          <div class="front">No flashcards available. Please add some first.</div>
-        `;
-        return;
-      }
-
-      if (reverseQuizIndex < shuffledReverseQuizCards.length) {
-        const flashcard = shuffledReverseQuizCards[reverseQuizIndex];
-        reverseQuizCardElement.innerHTML = `
-          <div class="front">${flashcard.word}</div>
-        `;
-        document.getElementById('reverse-quiz-answer').value = '';
-      } else {
-        reverseQuizCardElement.innerHTML = `
-          <div class="front">Quiz completed! You answered all cards.</div>
-        `;
-      }
-    }
-
-    // Check the answer in Reverse Quiz mode (En -> Vi)
-    function checkReverseAnswer() {
-      if (shuffledReverseQuizCards.length === 0) {
-        alert('No flashcards available. Please add some first.');
-        return;
-      }
-
-      const answer = document.getElementById('reverse-quiz-answer').value.trim().toLowerCase();
-      const correctAnswer = shuffledReverseQuizCards[reverseQuizIndex].meaning.toLowerCase();
-
-      // Check if answer includes part of the correct meaning
-      if (correctAnswer.includes(answer)) {
-        alert('Good job, you got part of the answer!');
-        reverseQuizIndex++;
-        if (reverseQuizIndex >= shuffledReverseQuizCards.length) {
-          alert('You have completed the reverse quiz!');
-          reverseQuizIndex = 0; // Reset reverse quiz
-          initializeReverseQuiz(); // Re-shuffle for new attempt
-        }
-        loadReverseQuizCard();
-      } else {
-        alert('Incorrect! Try again.');
-      }
-    }
-
-    // Show Flashcards, Quiz, Reverse Quiz
-    function showFlashcards() {
-      document.getElementById('menu').style.display = 'none';
-      document.getElementById('flashcards-section').style.display = 'block';
-      document.getElementById('quiz-section').style.display = 'none';
-      document.getElementById('reverse-quiz-section').style.display = 'none';
-      loadFlashcards(); // Load flashcards from localStorage
-    }
-
-    function showQuiz() {
-      document.getElementById('menu').style.display = 'none';
-      document.getElementById('flashcards-section').style.display = 'none';
-      document.getElementById('quiz-section').style.display = 'block';
-      document.getElementById('reverse-quiz-section').style.display = 'none';
-      initializeFlashcards(); // Refresh flashcards data
-      initializeQuiz(); // Initialize quiz with shuffled cards
-      loadQuizCard();
-    }
-
-    function showReverseQuiz() {
-      document.getElementById('menu').style.display = 'none';
-      document.getElementById('flashcards-section').style.display = 'none';
-      document.getElementById('quiz-section').style.display = 'none';
-      document.getElementById('reverse-quiz-section').style.display = 'block';
-      initializeFlashcards(); // Refresh flashcards data
-      initializeReverseQuiz(); // Initialize reverse quiz with shuffled cards
-      loadReverseQuizCard();
-    }
-
-    function backToMenu() {
-      document.getElementById('menu').style.display = 'flex';
-      document.getElementById('flashcards-section').style.display = 'none';
-      document.getElementById('quiz-section').style.display = 'none';
-      document.getElementById('reverse-quiz-section').style.display = 'none';
-    }
-
-    // Add flashcard functionality
-    function addFlashcard() {
-      const englishWord = document.getElementById('english-word').value;
-      const vietnameseMeaning = document.getElementById('vietnamese-meaning').value;
-      
-      // Clear previous error message
-      errorMessageElement.textContent = '';
-      errorMessageElement.style.display = 'none';
-
-      if (!englishWord.trim() || !vietnameseMeaning.trim()) {
-        errorMessageElement.textContent = "Vui lòng nhập cả từ và nghĩa.";
-        errorMessageElement.style.display = 'block';
-        return;
-      }
-
-      // Check for duplicates
-      const duplicateCheck = isDuplicateFlashcard(englishWord, vietnameseMeaning);
-      if (duplicateCheck.duplicate) {
-        errorMessageElement.textContent = duplicateCheck.message;
-        errorMessageElement.style.display = 'block';
-        return;
-      }
-
-      const newFlashcard = {
-        id: flashcardsForQuiz.length ? flashcardsForQuiz[flashcardsForQuiz.length - 1].id + 1 : 1,
-        word: englishWord.trim(),
-        meaning: vietnameseMeaning.trim()
-      };
-
-      flashcardsForQuiz.push(newFlashcard);
-      localStorage.setItem('flashcards', JSON.stringify(flashcardsForQuiz));
-
-      const flashcard = createFlashcard(newFlashcard.word, newFlashcard.meaning, newFlashcard.id);
-      document.getElementById('flashcard-container').appendChild(flashcard);
-
-      // Clear input fields
-      document.getElementById('english-word').value = '';
-      document.getElementById('vietnamese-meaning').value = '';
-    }
-
-    function createFlashcard(word, meaning, id) {
-      const flashcard = document.createElement('div');
-      flashcard.classList.add('flashcard');
-      flashcard.dataset.id = id;
-      flashcard.innerHTML = `
-        <div class="front">${word}</div>
-        <div class="back">${meaning}</div>
-        <button class="edit-btn" onclick="editFlashcard(${id})">Edit</button>
-        <button class="delete-btn" onclick="deleteFlashcard(${id})">Delete</button>
-      `;
-      flashcard.onclick = () => {
-        flashcard.classList.toggle('flip');
-      };
-
-      return flashcard;
-    }
-
-    // Load all flashcards from localStorage when loading Flashcards page
-    function loadFlashcards() {
-      initializeFlashcards(); // Refresh flashcards data
-      const container = document.getElementById('flashcard-container');
-      container.innerHTML = ''; // Clear the container before appending new flashcards
-
-      if (flashcardsForQuiz.length === 0) {
-        container.innerHTML = '<p>No flashcards yet. Add some using the form above.</p>';
-        return;
-      }
-
-      flashcardsForQuiz.forEach(card => {
-        const flashcard = createFlashcard(card.word, card.meaning, card.id);
-        container.appendChild(flashcard);
-      });
-    }
-
-    function deleteFlashcard(id) {
-      flashcardsForQuiz = flashcardsForQuiz.filter(card => card.id !== id);
-      localStorage.setItem('flashcards', JSON.stringify(flashcardsForQuiz));
-
-      const flashcard = document.querySelector(`.flashcard[data-id="${id}"]`);
-      if (flashcard) {
-        flashcard.remove();
-      }
-
-      // Refresh the display if all cards are deleted
-      if (flashcardsForQuiz.length === 0) {
-        loadFlashcards();
-      }
-    }
-
-    function editFlashcard(id) {
-      const flashcard = flashcardsForQuiz.find(card => card.id === id);
-
-      document.getElementById('english-word').value = flashcard.word;
-      document.getElementById('vietnamese-meaning').value = flashcard.meaning;
-
-      deleteFlashcard(id);
-    }
-
-    // Load the Flashcards when the page loads
-    window.onload = function() {
-      initializeFlashcards();
-      loadFlashcards();
-    };
-
-    // Add event listener for 'Enter' key to simulate click on 'Next'
-    document.getElementById('quiz-answer').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        checkAnswer();
-      }
-    });
-
-    document.getElementById('reverse-quiz-answer').addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        checkReverseAnswer();
-      }
-    });
-
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
   </script>
-
 </body>
 </html>
